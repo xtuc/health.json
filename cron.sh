@@ -1,9 +1,8 @@
 CPU=$(sh cpu.sh)
 RAM=$(sh ram.sh)
 HOSTNAME=$(hostname)
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
+LOAD=$(cat /proc/loadavg | awk -F '[ /]+' '{printf "{\"user\":%s,\"system\":%s,\"iowait\":%s}", $1, $2, $3}')
 
-JSON="{\"RAM\":$RAM,\"CPU\":$CPU,\"hostname\":\"$HOSTNAME\"}"
-
-curl -XPUT 'http://choozme.com:9200/twitter/tweet/1' -d '{
-    "report" : '$JSON'
-}'
+JSON="{\"hostname\":\"$HOSTNAME\", \"@timestamp\": \"$DATE\",\"RAM\":$RAM,\"CPU\":$CPU}"
+echo $JSON
